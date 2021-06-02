@@ -99,3 +99,27 @@ exports.list = async (req, res, next) => {
     }
  };
  
+
+ /**
+ * Update existing movie
+ * @public
+ */
+exports.addCity = async(req, res, next) => {
+    try{
+        let { movie } = req.locals
+        let { city } = req.body
+        let _movie = await Movie.findOneAndUpdate({_id:movie._id}, { $addToSet: { city : city  } },{new:true})
+        return res.json(_movie)
+    }catch(error){
+        return next(new APIError(error))
+    }
+ };
+
+ exports.getCinemaForMovie = async (req, res, next) => {
+    try {
+        let { cinemas } = req.locals
+        return res.json(cinemas)
+    } catch (error) { 
+       next(new APIError(error));
+    }
+ };

@@ -2,6 +2,7 @@ const Seat = require("@models/seat.model")
 const APIError = require('@utils/APIError');
 const httpStatus = require('http-status');
 const { omit } = require('lodash');
+const { relativeTimeRounding } = require("moment");
 
 
 /**
@@ -90,8 +91,6 @@ exports.remove = async (req, res, next) => {
  */
 exports.list = async (req, res, next) => {
     try {
-        let { isDeleted } = req.query
-        req.query.isDeleted = isDeleted ? isDeleted: false
         let seats = await Seat.list(req.query);
         return res.json(seats)
     } catch (error) { 
@@ -104,13 +103,17 @@ exports.list = async (req, res, next) => {
  * @public
  */
  exports.bookTicket = (req, res, next) => {
-     let { entity } =req.session
-     req.body.bookedBy = entity
-     req.body.isBooked = true
-    const updatedSeat = omit(req.body);
-    const seat_ = Object.assign(req.locals.seat, updatedSeat);
-
-    seat_.save()
-       .then(savedSeat => res.json(savedSeat))
-       .catch(e => next(new APIError(e)));
+     if(!req.locals.seat.isBooked){  
+         let { entity } = req.session
+         req.body.bookedBy = entity
+         req.body.isBooked = true
+         req.body.bookedAt = Date.now()
+         const updatedSeat = omit(req.body);
+         const seat_ = Object.assign(req.locals.seat, updatedSeat);
+         seat_.save()
+             .then(savedSeat => res.json(savedSeat))
+             .catch(e => next(new APIError(e)));
+     }else{
+         return next(new APIError({message:"Already booked"}))
+     }
  };

@@ -19,6 +19,6 @@ router
 
 router
    .route('/:seatId/book')
-   .get(controller.bookTicket)
+   .get(authorize(),controller.bookTicket)
 
 module.exports = router;

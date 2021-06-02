@@ -12,7 +12,8 @@ var citySchema = new Schema({
         required: true
     },
     pincode:{
-        type:String
+        type:String,
+        required: true
     },
     isDeleted:{
       type:Boolean,
@@ -70,8 +71,8 @@ citySchema.statics = {
       * @param {number} limit - Limit number of city types to be returned.
       * @returns {Promise<Subject[]>}
       */
-   async list({ page = 1, perPage = 100, search ,isDeleted,name }) {
-      let options = omitBy({ isDeleted,cityKeeper,search }, isNil);
+   async list({ page = 1, perPage = 100, search ,isDeleted }) {
+      let options = omitBy({ isDeleted,search }, isNil);
       let cities = await this.find(options)
          .sort({ createdAt: -1 })
          .skip(perPage * (page * 1 - 1))

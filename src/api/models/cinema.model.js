@@ -15,6 +15,10 @@ var cinemaSchema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: "City" 
     },
+    movies:[{ 
+      type: Schema.Types.ObjectId, 
+      ref: "Movie" 
+    }],
     description:{
       type:String
     },
@@ -31,7 +35,7 @@ cinemaSchema.index({ name: 1,city:1 }, { unique: true });
 cinemaSchema.method({
    transform() {
       const transformed = {};
-      const fields = ['id','name','city','isDeleted','updatedAt','createdAt'];
+      const fields = ['id','name','city','movies','isDeleted','updatedAt','createdAt'];
 
       fields.forEach((field) => {
          transformed[field] = this[field];

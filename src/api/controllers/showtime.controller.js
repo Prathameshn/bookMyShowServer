@@ -54,8 +54,8 @@ exports.create = async (req, res, next) => {
         }]
         const showtime = new Showtime(req.body);
         const savedshowtime = await showtime.save();
-        res.status(httpStatus.CREATED);
-        return res.json(savedshowtime.transform());
+        req.locals = { showTime :savedshowtime.transform() }
+        return next()
     } catch (error) {
         return next(new APIError(error));
     }
@@ -90,12 +90,22 @@ exports.remove = async (req, res, next) => {
  */
 exports.list = async (req, res, next) => {
     try {
-        let { isDeleted } = req.query
-        req.query.isDeleted = isDeleted ? isDeleted: false
         let showtimes = await Showtime.list(req.query);
         return res.json(showtimes)
     } catch (error) { 
        next(new APIError(error));
     }
+ };
+
+
+ exports.increseSeat = (req, res, next) => {
+     let { showtime } =req.locals
+    const showtime_ = Object.assign(req.locals.showtime, {numberOfSeat:showtime.numberOfSeat+1});
+
+    showtime_.save()
+       .then(savedShowtime => {
+           return next()
+        })
+       .catch(e => next(new APIError(e)));
  };
  

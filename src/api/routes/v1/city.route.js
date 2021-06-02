@@ -1,6 +1,6 @@
 const express = require('express');
 const controller = require('@controllers/city.controller');
-const { authorize } = require('@middlewares/auth');
+const movieServices = require("@services/movie.service")
 
 const router = express.Router();
 
@@ -8,13 +8,17 @@ router.param('cityId', controller.load);
 
 router
    .route('/')
-   .get(authorize(),controller.list)
-   .post(authorize(),controller.create)
+   .get(controller.list)
+   .post(controller.create)
 
 router
    .route('/:cityId')
-   .get(authorize(),controller.get)
-   .patch(authorize(),controller.update)
-   .delete(authorize(),controller.remove);
+   .get(controller.get)
+   .patch(controller.update)
+   .delete(controller.remove);
+
+router   
+   .route('/:cityId/movies')
+   .get(movieServices.getMoviesInCity,controller.getMoviesInCity)
 
 module.exports = router;

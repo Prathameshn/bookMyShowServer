@@ -47,11 +47,7 @@ exports.update = (req, res, next) => {
  * @public
  */
 exports.create = async (req, res, next) => {
-    try {
-        req.body.history = [{
-            action :"AVAILABLE",
-            executeAt:new Date()
-        }]
+    try {        
         const cinema = new Cinema(req.body);
         const savedcinema = await cinema.save();
         res.status(httpStatus.CREATED);
@@ -99,3 +95,28 @@ exports.list = async (req, res, next) => {
     }
  };
  
+
+  /**
+ * Update existing movie
+ * @public
+ */
+exports.addMovie = async(req, res, next) => {
+    try{
+        let { cinema } = req.locals
+        let { movie } = req.body
+        let _movie = await Cinema.findOneAndUpdate({_id:cinema._id}, { $addToSet: { movies : movie  } },{new:true})
+        return res.json(_movie)
+    }catch(error){
+        return next(new APIError(error))
+    }
+ };
+
+
+ exports.getShowtimeForMovie =async(req, res, next) => {
+    try{
+        let { showTimes } = req.locals
+        return res.json(showTimes)
+    }catch(error){
+        return next(new APIError(error))
+    }
+ };

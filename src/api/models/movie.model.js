@@ -14,10 +14,10 @@ var movieSchema = new Schema({
     description:{
       type:String
     },
-    city:{ 
+    city:[{ 
         type: Schema.Types.ObjectId, 
         ref: "City" 
-    },
+    }],
     isDeleted:{
       type:Boolean,
       default:false
@@ -31,7 +31,7 @@ movieSchema.index({ name: 1 }, { unique: true });
 movieSchema.method({
    transform() {
       const transformed = {};
-      const fields = ['id','name','description','city','isDeleted','updatedAt','createdAt'];
+      const fields = ['id','name','city','description','isDeleted','updatedAt','createdAt'];
 
       fields.forEach((field) => {
          transformed[field] = this[field];
@@ -52,7 +52,7 @@ movieSchema.statics = {
       try {
          let movie;
          if (mongoose.Types.ObjectId.isValid(id)) {
-            movie = await this.findById(id).populate('movieKeeper').exec();
+            movie = await this.findById(id).exec();
          }
          if (movie) {
             return movie;

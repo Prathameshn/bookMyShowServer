@@ -20,6 +20,9 @@ var seatSchema = new Schema({
       type:Boolean,
       default:false
    },
+   bookedAt:{
+      type:Date
+   },
    bookedBy:{
       type: Schema.Types.ObjectId, 
       ref: "User" 
@@ -33,7 +36,7 @@ seatSchema.index({ seatNumber:1, showtime:1 }, { unique: true });
 seatSchema.method({
    transform() {
       const transformed = {};
-      const fields = ['id','seatNumber','showtime','city','isDeleted','updatedAt','createdAt'];
+      const fields = ['id','seatNumber','showtime','bookedAt','bookedBy','isBooked','isDeleted','updatedAt','createdAt'];
 
       fields.forEach((field) => {
          transformed[field] = this[field];
@@ -76,10 +79,10 @@ seatSchema.statics = {
       * @param {number} limit - Limit number of seat types to be returned.
       * @returns {Promise<Subject[]>}
       */
-   async list({ page = 1, perPage = 30, name,isDeleted }) {
-      let options = omitBy({ isDeleted }, isNil);
+   async list({ page = 1, perPage = 200,showtime,isBooked }) {
+      let options = omitBy({ showtime,isBooked }, isNil);
       let seats = await this.find(options)
-         .sort({ createdAt: -1 })
+         .sort({ seatNumber: -1 })
          .skip(perPage * (page * 1 - 1))
          .limit(perPage * 1)
          .exec();

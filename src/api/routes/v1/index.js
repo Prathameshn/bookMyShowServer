@@ -17,5 +17,10 @@ router.get('/status', (req, res) => res.send('OK'));
 
 router.use('/users', userRoutes);
 router.use('/auth', authRoutes);
+router.use('/city', cityRoute);
+router.use('/movie', movieRoute);
+router.use('/seat', seatRoute);
+router.use('/cinema', cinemaRoute);
+router.use('/showtime', showTimeRoute);
 
 module.exports = router;

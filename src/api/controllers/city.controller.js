@@ -99,3 +99,12 @@ exports.list = async (req, res, next) => {
     }
  };
  
+ exports.getMoviesInCity = async (req, res, next) => {
+    try {
+        let { movies } = req.locals
+        return res.json(movies)
+    } catch (error) { 
+       next(new APIError(error));
+    }
+ };
+ 

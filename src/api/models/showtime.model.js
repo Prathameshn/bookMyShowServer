@@ -20,6 +20,10 @@ var showtimeSchema = new Schema({
     movie:{
       type: Schema.Types.ObjectId, 
       ref: "Movie" 
+    },
+    numberOfSeat:{
+      type: Number,
+      required:true
     }
 },
    { timestamps: true }
