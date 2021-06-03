@@ -1,4 +1,4 @@
-# Express Store Management System
+# Bookmyshow
 
 Store Management System Project for building RESTful APIs and microservices using Node.js, Express and MongoDB
 
